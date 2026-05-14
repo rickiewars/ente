@@ -99,6 +99,9 @@ internal:
   admin: 1580559962386438  # This first user ID seems to be deterministic (but it may change in the future)
   # Uncomment after registering the admin account to disable additional users:
   # disable-registration: true
+  # Optionally, allow specific emails to register while registration is disabled:
+  # allowed-registrations:
+  #   - alice@example.com
 
 db:
   host: postgres

@@ -408,6 +408,9 @@ internal:
     # During sign up, the client will get an unauthorized error and
     # thus cannot create new accounts.
     disable-registration: false
+    # List of email addresses that are allowed to register when registrations are disabled
+    # allowed-registrations:
+    #     - "example@example.org"
 
 # Replication config
 #

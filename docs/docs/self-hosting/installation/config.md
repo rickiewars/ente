@@ -212,6 +212,7 @@ smtp:
 | `internal.admins`                            | List of admin user IDs                                                                                                                                                  | `[]`    |
 | `internal.admin`                             | Single admin user ID                                                                                                                                                    |         |
 | `internal.disable-registration`              | Disable user registration                                                                                                                                               | `false` |
+| `internal.allowed-registrations`             | List of emails that are allowed to register when registration is disabled                                                                                               | `[]`    |
 
 ### Replication
 

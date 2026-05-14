@@ -128,3 +128,22 @@ You can disable new registrations by using the following configuration in
 internal:
     disable-registration: true
 ```
+
+### Allow specific registrations
+
+If you want to allow specific email addresses to register while registration is
+otherwise disabled, you can use the `allowed-registrations` option.
+
+```yaml
+internal:
+    disable-registration: true
+    allowed-registrations:
+        - alice@example.com
+        - bob@example.com
+```
+
+This can also be set via an environment variable using a comma-separated list:
+
+```bash
+ENTE_INTERNAL_ALLOWED_REGISTRATIONS=alice@example.com,bob@example.com
+```

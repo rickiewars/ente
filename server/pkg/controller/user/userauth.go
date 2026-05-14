@@ -152,6 +152,20 @@ func (c *UserController) isEmailAlreadyUsed(email string) error {
 	return nil
 }
 
+func isSignUpAllowedForEmail(email string) bool {
+		if (!viper.GetBool("internal.disable-registration")) {
+			return true;
+		}
+
+    viper.SetDefault("internal.allowed-registrations", []string{})
+    for _, allowed := range viper.GetStringSlice("internal.allowed-registrations") {
+        if strings.EqualFold(allowed, email) {
+            return true
+        }
+    }
+    return false
+}
+
 func (c *UserController) validateSendOTT(ctx *gin.Context, email string, purpose string) error {
 	if purpose == ente.ChangeEmailOTTPurpose {
 		if err := c.isEmailAlreadyUsed(email); err != nil {
@@ -162,7 +176,7 @@ func (c *UserController) validateSendOTT(ctx *gin.Context, email string, purpose
 	if err != nil {
 		return stacktrace.Propagate(err, "")
 	}
-	if purpose == ente.SignUpOTTPurpose && viper.GetBool("internal.disable-registration") && signupState != signUpStateComplete {
+	if purpose == ente.SignUpOTTPurpose && !isSignUpAllowedForEmail(email) && signupState != signUpStateComplete {
 		return stacktrace.Propagate(ente.ErrPermissionDenied, "registration is disabled")
 	}
 	//
@@ -571,7 +585,7 @@ func (c *UserController) onVerificationSuccess(context *gin.Context, email strin
 	userID, err := c.UserRepo.GetUserIDWithEmail(email)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			if viper.GetBool("internal.disable-registration") {
+			if !isSignUpAllowedForEmail(email) {
 				return ente.EmailAuthorizationResponse{}, stacktrace.Propagate(ente.ErrPermissionDenied, "")
 			} else {
 				userID, _, err = c.createUser(email, source)
