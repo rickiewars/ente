@@ -29,8 +29,11 @@ jobs:
           git remote add upstream https://github.com/ente-io/ente.git
           git fetch upstream main
 
-      - name: Merge upstream into feature branch
-        run: git merge upstream/main --no-edit
+      - name: Merge upstream excluding .github
+        run: |
+          git merge upstream/main --no-edit --no-commit || true
+          git checkout HEAD -- .github/
+          git commit -m "chore: sync upstream main" --allow-empty
 
       - name: Push or create PR on conflict
         env:
