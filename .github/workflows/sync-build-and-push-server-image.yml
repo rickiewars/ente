@@ -11,6 +11,7 @@ on:
 permissions:
   contents: write # for pushing the `ghcr/server` branch
   packages: write
+  workflows: write
 
 jobs:
   publish:
