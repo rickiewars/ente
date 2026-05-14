@@ -1,4 +1,4 @@
-name: "Sync upstream (server)"
+name: "Sync upstream and publish (server)"
 
 on:
   schedule:
@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  sync:
+  sync-and-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -36,7 +36,21 @@ jobs:
       - name: Push
         run: git push origin main
 
-      - name: Trigger publish
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh workflow run publish-server.yml --ref main --repo ${{ github.repository }}
+      - name: Get commit SHA
+        id: sha
+        run: echo "sha=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Build and push
+        uses: mr-smithers-excellent/docker-build-push@v6
+        with:
+          dockerfile: server/Dockerfile
+          directory: server
+          image: server
+          registry: ghcr.io
+          enableBuildKit: true
+          multiPlatform: true
+          platform: linux/amd64,linux/arm64
+          buildArgs: GIT_COMMIT=${{ steps.sha.outputs.sha }}
+          tags: ${{ steps.sha.outputs.sha }}, latest
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
