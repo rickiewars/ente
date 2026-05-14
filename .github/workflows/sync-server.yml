@@ -19,18 +19,33 @@ jobs:
           ref: feat/register-allow-list
           fetch-depth: 0
 
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Fetch upstream
         run: |
           git remote add upstream https://github.com/ente-io/ente.git
           git fetch upstream main
 
-      - name: Create PR from upstream
-        uses: repo-sync/pull-request@v2
-        with:
-          source_branch: upstream/main
-          destination_branch: feat/register-allow-list
-          pr_title: "chore: sync upstream main"
-          pr_body: "Automated upstream sync"
-          auto_merge: true
-          merge_method: merge
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Merge upstream into feature branch
+        run: git merge upstream/main --no-edit
+
+      - name: Push or create PR on conflict
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if git push origin feat/register-allow-list; then
+            echo "Pushed successfully, no PR needed"
+          else
+            git merge --abort
+            git fetch origin feat/register-allow-list
+            git checkout feat/register-allow-list
+            PR_URL=$(gh pr create \
+              --title "chore: sync upstream main" \
+              --body "Automated upstream sync — conflicts need manual resolution" \
+              --base feat/register-allow-list \
+              --head upstream/main)
+            gh pr merge "$PR_URL" --auto --merge
+          fi
