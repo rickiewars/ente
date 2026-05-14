@@ -32,6 +32,8 @@ ENTE_INTERNAL_ALLOWED_REGISTRATIONS="alice@example.com bob@example.com"
 
 See the [upstream PR](https://github.com/ente-io/ente/pull/10440) for more details.
 
+___
+
 <div align="center">
 
 <img src=".github/assets/ente-rocketship.png" width="400"/>
