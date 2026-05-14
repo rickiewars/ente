@@ -7,16 +7,14 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout fork
+      - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: feat/register-allow-list
           fetch-depth: 0
 
       - name: Configure git
@@ -35,20 +33,5 @@ jobs:
           git checkout HEAD -- .github/
           git commit -m "chore: sync upstream main" --allow-empty
 
-      - name: Push or create PR on conflict
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          if git push origin feat/register-allow-list; then
-            echo "Pushed successfully, no PR needed"
-          else
-            git merge --abort
-            git fetch origin feat/register-allow-list
-            git checkout feat/register-allow-list
-            PR_URL=$(gh pr create \
-              --title "chore: sync upstream main" \
-              --body "Automated upstream sync — conflicts need manual resolution" \
-              --base feat/register-allow-list \
-              --head upstream/main)
-            gh pr merge "$PR_URL" --auto --merge
-          fi
+      - name: Push
+        run: git push origin main

@@ -3,7 +3,7 @@ name: "Publish (server)"
 on:
   push:
     branches:
-      - feat/register-allow-list
+      - main
   workflow_dispatch:
 
 permissions:
@@ -15,9 +15,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: feat/register-allow-list
-          fetch-depth: 0
 
       - name: Get commit SHA
         id: sha
