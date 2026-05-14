@@ -1,3 +1,37 @@
+## About this fork
+
+This is a fork of [ente-io/ente](https://github.com/ente-io/ente) with custom
+patches applied. It is periodically synced with upstream and a Docker image is
+published to `ghcr.io/rickiewars/ente/server:latest`.
+
+> [!WARNING]
+> This fork is not recommended for long-term production use. For a stable
+> production setup, use the official image at `ghcr.io/ente-io/server:latest`.
+
+### Changes
+
+#### Allow specific registrations when registration is disabled
+
+Adds an `allowed-registrations` option to complement `disable-registration`.
+When registration is disabled, any email address listed under
+`allowed-registrations` is still permitted to sign up.
+
+```yaml
+internal:
+  disable-registration: true
+  allowed-registrations:
+    - alice@example.com
+    - bob@example.com
+```
+
+Or using environment variable:
+
+```shell
+ENTE_INTERNAL_ALLOWED_REGISTRATIONS="alice@example.com bob@example.com"
+```
+
+See the [upstream PR](https://github.com/ente-io/ente/pull/10440) for more details.
+
 <div align="center">
 
 <img src=".github/assets/ente-rocketship.png" width="400"/>
