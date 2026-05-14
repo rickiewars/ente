@@ -39,4 +39,4 @@ jobs:
       - name: Trigger publish
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh workflow run server-publish.yml --ref main
+        run: gh workflow run publish-server.yml --ref main
