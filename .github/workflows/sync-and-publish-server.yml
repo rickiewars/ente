@@ -45,7 +45,7 @@ jobs:
         with:
           dockerfile: server/Dockerfile
           directory: server
-          image: server
+          image: ente/server
           registry: ghcr.io
           enableBuildKit: true
           multiPlatform: true
