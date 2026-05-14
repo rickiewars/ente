@@ -1,0 +1,36 @@
+name: "Sync upstream (server)"
+
+on:
+  schedule:
+    - cron: "0 5 15 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout fork
+        uses: actions/checkout@v4
+        with:
+          ref: feat/register-allow-list
+          fetch-depth: 0
+
+      - name: Fetch upstream
+        run: |
+          git remote add upstream https://github.com/ente-io/ente.git
+          git fetch upstream main
+
+      - name: Create PR from upstream
+        uses: repo-sync/pull-request@v2
+        with:
+          source_branch: upstream/main
+          destination_branch: feat/register-allow-list
+          pr_title: "chore: sync upstream main"
+          pr_body: "Automated upstream sync"
+          auto_merge: true
+          merge_method: merge
+          github_token: ${{ secrets.GITHUB_TOKEN }}
