@@ -142,8 +142,8 @@ internal:
         - bob@example.com
 ```
 
-This can also be set via an environment variable using a comma-separated list:
+This can also be set via an environment variable using a space-separated list:
 
 ```bash
-ENTE_INTERNAL_ALLOWED_REGISTRATIONS=alice@example.com,bob@example.com
+ENTE_INTERNAL_ALLOWED_REGISTRATIONS="alice@example.com bob@example.com"
 ```
